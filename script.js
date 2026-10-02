@@ -361,6 +361,7 @@ function scrollToSection(sectionId) {
 async function loadLiveDestinationSuggestions() {
   try {
     const response = await fetch('/api/places?lat=22.3072&lon=73.1812&radius=10000&limit=30');
+    if (response.status === 404) return;
     const data = await response.json();
     if (response.status === 503 && data.configured === false) return;
     if (!response.ok) throw new Error(data.error || 'Unable to fetch live places');
