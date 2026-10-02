@@ -729,13 +729,39 @@ function attachResultCardActions() {
   if (!savedTripsGrid.dataset.favoriteHandlerBound) {
     savedTripsGrid.dataset.favoriteHandlerBound = 'true';
     savedTripsGrid.addEventListener('click', (event) => {
-      const button = event.target.closest('[data-remove-favorite]');
-      if (button) removeSavedTrip(button.dataset.removeFavorite);
+      const target = event.target;
+      const removeTripButton = target.closest('[data-remove-favorite]');
+      if (removeTripButton) {
+        removeSavedTrip(removeTripButton.dataset.removeFavorite);
+        return;
+      }
+
+      const removeActivityButton = target.closest('[data-remove-activity]');
+      if (removeActivityButton) {
+        removeSavedActivity(removeActivityButton.dataset.destination, Number(removeActivityButton.dataset.removeActivity));
+        return;
+      }
+
+      const viewTripButton = target.closest('[data-view-trip]');
+      if (viewTripButton) viewSavedTrip(viewTripButton.dataset.viewTrip);
+    });
+
+    savedTripsGrid.addEventListener('change', (event) => {
+      const daySelect = event.target.closest('[data-activity-day]');
+      if (daySelect) updateSavedActivityDay(daySelect.dataset.destination, Number(daySelect.dataset.activityIndex), daySelect.value);
+    });
+  }
+
+  if (!gemsGrid.dataset.addGemHandlerBound) {
+    gemsGrid.dataset.addGemHandlerBound = 'true';
+    gemsGrid.addEventListener('click', (event) => {
+      const button = event.target.closest('[data-add-gem]');
+      if (button) addGemToTrip(button.dataset.destination, Number(button.dataset.addGem));
     });
   }
 }
 
-function updateDestinationDetail(destination) {
+function updateDestinationDetail(destination, savedTrip = savedTrips.find((trip) => trip.destination === destination.name)) {
   selectedDestination = destination;
   compatibilityList.innerHTML = '';
   const preferences = [
@@ -763,9 +789,22 @@ function updateDestinationDetail(destination) {
   scoreRing.innerHTML = `<span>${destination.score}%</span>`;
 
   const selectedDestinationData = destination;
+  const savedActivities = savedTrip?.activities || [];
   const itineraryDays = [
-    { day: 'SATURDAY', items: selectedDestinationData.itinerary.saturday },
-    { day: 'SUNDAY', items: selectedDestinationData.itinerary.sunday }
+    {
+      day: 'SATURDAY',
+      items: [
+        ...selectedDestinationData.itinerary.saturday,
+        ...savedActivities.filter((activity) => activity.day === 'saturday').map((activity) => ({ time: activity.time || '03:00 PM', label: activity.name, icon: '💎' }))
+      ]
+    },
+    {
+      day: 'SUNDAY',
+      items: [
+        ...selectedDestinationData.itinerary.sunday,
+        ...savedActivities.filter((activity) => activity.day !== 'saturday').map((activity) => ({ time: activity.time || '03:00 PM', label: activity.name, icon: '💎' }))
+      ]
+    }
   ];
 
   itineraryWrap.innerHTML = itineraryDays
@@ -798,17 +837,18 @@ function updateDestinationDetail(destination) {
   bindDayToggle();
 
   const gemCards = selectedDestinationData.hiddenGems
-    .map(
-      (gem) => `
+    .map((gem, index) => {
+      const isAdded = savedActivities.some((activity) => activity.name === gem.name);
+      return `
         <article class="gem-card">
           <span class="gem-badge">💎 Hidden Gem</span>
           <h4>${gem.name}</h4>
           <p>${gem.description}</p>
           <div class="gem-meta"><span>Best time: ${gem.bestTime}</span><span>${gem.time}</span></div>
-          <button type="button">Add to My Trip +</button>
+          <button type="button" data-add-gem="${index}" data-destination="${destination.name}" aria-pressed="${isAdded}" class="${isAdded ? 'is-added' : ''}">${isAdded ? 'Added to My Trip ✓' : 'Add to My Trip +'}</button>
         </article>
-      `
-    )
+      `;
+    })
     .join('');
   gemsGrid.innerHTML = gemCards;
 
@@ -846,15 +886,7 @@ function saveTrip(destination) {
   if (savedIndex !== -1) {
     savedTrips.splice(savedIndex, 1);
   } else {
-    const trip = {
-      destination: destination.name,
-      tripDate: 'This weekend',
-      budget: destination.budget,
-      people: formState.company,
-      savedDate: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
-    };
-
-    savedTrips.unshift(trip);
+    savedTrips.unshift(createSavedTrip(destination));
   }
 
   persistSavedTrips();
@@ -862,11 +894,78 @@ function saveTrip(destination) {
   syncFavoriteButtons();
 }
 
+function createSavedTrip(destination) {
+  return {
+    destination: destination.name,
+    tripDate: 'This weekend',
+    budget: destination.budget,
+    people: formState.company,
+    savedDate: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
+    activities: []
+  };
+}
+
+function addGemToTrip(destinationName, gemIndex) {
+  const destination = destinations.find((item) => item.name === destinationName);
+  const gem = destination?.hiddenGems[gemIndex];
+  if (!destination || !gem) return;
+
+  let trip = savedTrips.find((item) => item.destination === destinationName);
+  if (!trip) {
+    trip = createSavedTrip(destination);
+    savedTrips.unshift(trip);
+  }
+  trip.activities = trip.activities || [];
+
+  if (!trip.activities.some((activity) => activity.name === gem.name)) {
+    trip.activities.push({ ...gem, day: 'sunday', time: '03:00 PM' });
+  }
+
+  persistSavedTrips();
+  renderSavedTrips();
+  updateDestinationDetail(destination, trip);
+}
+
+function removeSavedActivity(destinationName, activityIndex) {
+  const trip = savedTrips.find((item) => item.destination === destinationName);
+  if (!trip?.activities?.[activityIndex]) return;
+
+  trip.activities.splice(activityIndex, 1);
+  persistSavedTrips();
+  renderSavedTrips();
+
+  const destination = destinations.find((item) => item.name === destinationName);
+  if (destination) updateDestinationDetail(destination, trip);
+}
+
+function updateSavedActivityDay(destinationName, activityIndex, day) {
+  const trip = savedTrips.find((item) => item.destination === destinationName);
+  if (!trip?.activities?.[activityIndex] || !['saturday', 'sunday'].includes(day)) return;
+
+  trip.activities[activityIndex].day = day;
+  persistSavedTrips();
+  renderSavedTrips();
+
+  const destination = destinations.find((item) => item.name === destinationName);
+  if (destination) updateDestinationDetail(destination, trip);
+}
+
+function viewSavedTrip(destinationName) {
+  const trip = savedTrips.find((item) => item.destination === destinationName);
+  const destination = destinations.find((item) => item.name === destinationName);
+  if (!trip || !destination) return;
+
+  updateDestinationDetail(destination, trip);
+  document.querySelector('.itinerary-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
 function removeSavedTrip(destinationName) {
   savedTrips = savedTrips.filter((trip) => trip.destination !== destinationName);
   persistSavedTrips();
   renderSavedTrips();
   syncFavoriteButtons();
+  syncGemButtons();
+  if (selectedDestination?.name === destinationName) updateDestinationDetail(selectedDestination, null);
 }
 
 function syncFavoriteButtons() {
@@ -878,13 +977,27 @@ function syncFavoriteButtons() {
   });
 }
 
+function syncGemButtons() {
+  document.querySelectorAll('[data-add-gem]').forEach((button) => {
+    const trip = savedTrips.find((item) => item.destination === button.dataset.destination);
+    const destination = destinations.find((item) => item.name === button.dataset.destination);
+    const gem = destination?.hiddenGems[Number(button.dataset.addGem)];
+    const isAdded = Boolean(gem && trip?.activities?.some((activity) => activity.name === gem.name));
+    button.textContent = isAdded ? 'Added to My Trip ✓' : 'Add to My Trip +';
+    button.classList.toggle('is-added', isAdded);
+    button.setAttribute('aria-pressed', String(isAdded));
+  });
+}
+
 function renderSavedTrips() {
   savedTripsGrid.innerHTML = savedTrips.length
     ? savedTrips
         .map(
-          (trip) => `
+          (trip) => {
+            const activities = trip.activities || [];
+            return `
             <article class="saved-card">
-              <span class="badge">Saved trip</span>
+              <span class="badge">My trip</span>
               <h4>${trip.destination}</h4>
               <div class="saved-meta">
                 <span>Trip date: ${trip.tripDate}</span>
@@ -892,9 +1005,26 @@ function renderSavedTrips() {
                 <span>People: ${trip.people}</span>
                 <span>Saved: ${trip.savedDate}</span>
               </div>
-              <button class="remove-favorite-btn" type="button" data-remove-favorite="${trip.destination}">Remove from favorites</button>
+              <div class="trip-activities">
+                <strong>Selected activities</strong>
+                ${activities.length ? activities.map((activity, index) => `
+                  <div class="trip-activity">
+                    <span>${activity.name}</span>
+                    <select aria-label="Schedule ${activity.name}" data-activity-day data-destination="${trip.destination}" data-activity-index="${index}">
+                      <option value="saturday" ${activity.day === 'saturday' ? 'selected' : ''}>Saturday</option>
+                      <option value="sunday" ${activity.day !== 'saturday' ? 'selected' : ''}>Sunday</option>
+                    </select>
+                    <button type="button" class="remove-activity-btn" data-remove-activity="${index}" data-destination="${trip.destination}">Remove</button>
+                  </div>
+                `).join('') : '<p>No activities added to this plan yet.</p>'}
+              </div>
+              <div class="saved-card-actions">
+                <button class="view-trip-btn" type="button" data-view-trip="${trip.destination}">View Trip</button>
+                <button class="remove-favorite-btn" type="button" data-remove-favorite="${trip.destination}">Remove from My Trips</button>
+              </div>
             </article>
-          `
+          `;
+          }
         )
         .join('')
     : `
