@@ -332,6 +332,25 @@ let results = [];
 let selectedDestination = null;
 let savedTrips = [];
 
+function loadSavedTrips() {
+  try {
+    const storedTrips = JSON.parse(localStorage.getItem('tripmate-saved-trips') || '[]');
+    savedTrips = Array.isArray(storedTrips) ? storedTrips : [];
+  } catch {
+    savedTrips = [];
+  }
+}
+
+function persistSavedTrips() {
+  try {
+    localStorage.setItem('tripmate-saved-trips', JSON.stringify(savedTrips));
+  } catch (error) {
+    console.warn('Favorites could not be saved in this browser.', error);
+  }
+}
+
+loadSavedTrips();
+
 function scrollToSection(sectionId) {
   const target = document.getElementById(sectionId);
   if (target) {
@@ -595,6 +614,7 @@ function setupBuilderInteractions() {
 }
 
 function buildResultCard(destination, index) {
+  const isSaved = savedTrips.some((trip) => trip.destination === destination.name);
   return `
     <article class="result-card ${index === 0 ? 'active' : ''}" data-name="${destination.name}">
       <div class="result-image" style="background-image:url('${destination.image}')">
@@ -615,7 +635,7 @@ function buildResultCard(destination, index) {
         <div class="card-actions">
           <button class="explore-btn" data-explore="${destination.name}">Explore Trip</button>
           <button class="compare-btn" data-compare="${destination.name}">Compare</button>
-          <button class="save-btn" data-save="${destination.name}">Save ❤️</button>
+          <button class="save-btn ${isSaved ? 'is-saved' : ''}" data-save="${destination.name}" aria-pressed="${isSaved}">${isSaved ? 'Remove from favorites ♥' : 'Save to favorites ♡'}</button>
         </div>
       </div>
     </article>
@@ -704,6 +724,14 @@ function attachResultCardActions() {
       saveTrip(destination);
     });
   });
+
+  if (!savedTripsGrid.dataset.favoriteHandlerBound) {
+    savedTripsGrid.dataset.favoriteHandlerBound = 'true';
+    savedTripsGrid.addEventListener('click', (event) => {
+      const button = event.target.closest('[data-remove-favorite]');
+      if (button) removeSavedTrip(button.dataset.removeFavorite);
+    });
+  }
 }
 
 function updateDestinationDetail(destination) {
@@ -811,22 +839,47 @@ function renderComparisonTable() {
 }
 
 function saveTrip(destination) {
-  const trip = {
-    destination: destination.name,
-    tripDate: 'This weekend',
-    budget: destination.budget,
-    people: formState.company,
-    savedDate: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
-  };
+  if (!destination) return;
 
-  savedTrips.unshift(trip);
+  const savedIndex = savedTrips.findIndex((trip) => trip.destination === destination.name);
+  if (savedIndex !== -1) {
+    savedTrips.splice(savedIndex, 1);
+  } else {
+    const trip = {
+      destination: destination.name,
+      tripDate: 'This weekend',
+      budget: destination.budget,
+      people: formState.company,
+      savedDate: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
+    };
+
+    savedTrips.unshift(trip);
+  }
+
+  persistSavedTrips();
   renderSavedTrips();
+  syncFavoriteButtons();
+}
+
+function removeSavedTrip(destinationName) {
+  savedTrips = savedTrips.filter((trip) => trip.destination !== destinationName);
+  persistSavedTrips();
+  renderSavedTrips();
+  syncFavoriteButtons();
+}
+
+function syncFavoriteButtons() {
+  document.querySelectorAll('[data-save]').forEach((button) => {
+    const isSaved = savedTrips.some((trip) => trip.destination === button.dataset.save);
+    button.textContent = isSaved ? 'Remove from favorites ♥' : 'Save to favorites ♡';
+    button.classList.toggle('is-saved', isSaved);
+    button.setAttribute('aria-pressed', String(isSaved));
+  });
 }
 
 function renderSavedTrips() {
   savedTripsGrid.innerHTML = savedTrips.length
     ? savedTrips
-        .slice(0, 3)
         .map(
           (trip) => `
             <article class="saved-card">
@@ -838,7 +891,7 @@ function renderSavedTrips() {
                 <span>People: ${trip.people}</span>
                 <span>Saved: ${trip.savedDate}</span>
               </div>
-              <button type="button">View Trip</button>
+              <button class="remove-favorite-btn" type="button" data-remove-favorite="${trip.destination}">Remove from favorites</button>
             </article>
           `
         )

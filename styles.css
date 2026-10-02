@@ -691,6 +691,11 @@ button:active {
   color: var(--text);
 }
 
+.card-actions .save-btn.is-saved {
+  background: rgba(255,138,101,0.14);
+  border-color: rgba(255,138,101,0.3);
+}
+
 .detail-shell {
   background: linear-gradient(135deg, rgba(255,255,255,0.7), rgba(243, 229, 220, 0.8));
   border: 1px solid rgba(29,36,50,0.05);
@@ -1242,6 +1247,11 @@ button:active {
   border-radius: 12px;
   padding: 0.8rem 1rem;
   font-weight: 800;
+}
+
+.saved-card .remove-favorite-btn {
+  background: rgba(255,138,101,0.12);
+  color: var(--text);
 }
 
 .about-card h3,
