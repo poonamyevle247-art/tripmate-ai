@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TripMate AI | Your weekend. Your vibe. Your perfect plan.</title>
+    <meta
+      name="description"
+      content="TripMate AI helps you discover the right weekend getaway based on your mood, budget, travel style and group size."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="noise"></div>
+    <header class="topbar">
+      <div class="container nav">
+        <div class="brand-wrap">
+          <div class="brand-mark">T</div>
+          <div class="brand-text">
+            <span class="brand-name">TripMate AI</span>
+            <small>Weekend planner</small>
+          </div>
+        </div>
+        <nav class="main-nav">
+          <a href="#home">Home</a>
+          <a href="#trip-builder">Trip Builder</a>
+          <a href="#destinations">Destinations</a>
+          <a href="#my-trips">My Trips</a>
+          <a href="#about">About</a>
+          <a href="#contact">Contact</a>
+        </nav>
+        <button class="nav-cta" data-scroll="trip-builder">Plan My Weekend</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" id="home">
+        <div class="container hero-grid">
+          <div class="hero-copy">
+            <div class="eyebrow">AI weekend planner</div>
+            <h1>Where should your next weekend take you?</h1>
+            <p>
+              Tell us your vibe, budget and time. TripMate AI builds a weekend
+              plan around you.
+            </p>
+            <div class="cta-row">
+              <button class="primary-btn" data-scroll="trip-builder">Build My Trip ✨</button>
+              <button class="secondary-btn" id="surpriseTrigger">Surprise Me 🎲</button>
+            </div>
+            <div class="hero-metrics">
+              <div>
+                <strong>1.5K+</strong>
+                <span>weekends matched</span>
+              </div>
+              <div>
+                <strong>90%</strong>
+                <span>vibe fit</span>
+              </div>
+              <div>
+                <strong>6 hrs</strong>
+                <span>saved planning</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-visual" aria-label="Travel map visual">
+            <div class="globe-card">
+              <div class="orbit orbit-one"></div>
+              <div class="orbit orbit-two"></div>
+              <div class="globe-core">
+                <span class="pin pin-a"></span>
+                <span class="pin pin-b"></span>
+                <span class="pin pin-c"></span>
+                <span class="pin pin-d"></span>
+                <span class="pin pin-e"></span>
+                <span class="pin pin-f"></span>
+              </div>
+            </div>
+            <div class="floating-card card-one">
+              <span class="chip">Nature</span>
+              <strong>Coorg</strong>
+            </div>
+            <div class="floating-card card-two">
+              <span class="chip">Sunset</span>
+              <strong>Goa</strong>
+            </div>
+            <div class="floating-card card-three">
+              <span class="chip">Culture</span>
+              <strong>Jaipur</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="vibes-section container">
+        <div class="section-heading">
+          <p>Travel by Vibe</p>
+          <h2>Pick the mood that feels like your weekend.</h2>
+        </div>
+        <div class="vibe-grid" id="vibeGrid">
+          <button class="vibe-card active" data-vibe="Peaceful">
+            <span>🌿</span>
+            <strong>Peaceful</strong>
+          </button>
+          <button class="vibe-card" data-vibe="Adventure">
+            <span>🏔️</span>
+            <strong>Adventure</strong>
+          </button>
+          <button class="vibe-card" data-vibe="Photography">
+            <span>📸</span>
+            <strong>Photography</strong>
+          </button>
+          <button class="vibe-card" data-vibe="Foodie">
+            <span>🍜</span>
+            <strong>Foodie</strong>
+          </button>
+          <button class="vibe-card" data-vibe="Culture & History">
+            <span>🏛️</span>
+            <strong>Culture &amp; History</strong>
+          </button>
+          <button class="vibe-card" data-vibe="Scenic Escape">
+            <span>🌅</span>
+            <strong>Scenic Escape</strong>
+          </button>
+        </div>
+      </section>
+
+      <section class="builder-section container" id="trip-builder">
+        <div class="builder-shell">
+          <div class="section-heading narrow">
+            <p>AI Trip Builder</p>
+            <h2>Build a weekend that fits your energy.</h2>
+          </div>
+
+          <div class="progress-steps" aria-label="Trip builder progress">
+            <span class="step active">01</span>
+            <span class="step">02</span>
+            <span class="step">03</span>
+            <span class="step">04</span>
+            <span class="step">05</span>
+            <span class="step">06</span>
+          </div>
+
+          <div class="builder-form">
+            <div class="builder-step active" data-step="0">
+              <h3>What's your mood?</h3>
+              <div class="option-grid single-select">
+                <button class="option-btn selected" data-group="mood" data-value="Relax & Recharge">Relax &amp; Recharge</button>
+                <button class="option-btn" data-group="mood" data-value="Adventure">Adventure</button>
+                <button class="option-btn" data-group="mood" data-value="Explore Culture">Explore Culture</button>
+                <button class="option-btn" data-group="mood" data-value="Food & Fun">Food &amp; Fun</button>
+                <button class="option-btn" data-group="mood" data-value="Nature Escape">Nature Escape</button>
+                <button class="option-btn" data-group="mood" data-value="Photography">Photography</button>
+              </div>
+            </div>
+
+            <div class="builder-step" data-step="1">
+              <h3>Who are you travelling with?</h3>
+              <div class="option-grid single-select">
+                <button class="option-btn" data-group="company" data-value="Solo">Solo</button>
+                <button class="option-btn" data-group="company" data-value="Couple">Couple</button>
+                <button class="option-btn" data-group="company" data-value="Friends">Friends</button>
+                <button class="option-btn" data-group="company" data-value="Family">Family</button>
+              </div>
+            </div>
+
+            <div class="builder-step" data-step="2">
+              <h3>What's your budget?</h3>
+              <div class="option-grid single-select">
+                <button class="option-btn" data-group="budget" data-value="Under ₹1,000">Under ₹1,000</button>
+                <button class="option-btn" data-group="budget" data-value="₹1,000–₹2,000">₹1,000–₹2,000</button>
+                <button class="option-btn" data-group="budget" data-value="₹2,000–₹5,000">₹2,000–₹5,000</button>
+                <button class="option-btn" data-group="budget" data-value="₹5,000+">₹5,000+</button>
+              </div>
+            </div>
+
+            <div class="builder-step" data-step="3">
+              <h3>How much time do you have?</h3>
+              <div class="option-grid single-select">
+                <button class="option-btn" data-group="time" data-value="One Day">One Day</button>
+                <button class="option-btn" data-group="time" data-value="Weekend">Weekend</button>
+                <button class="option-btn" data-group="time" data-value="3 Days">3 Days</button>
+              </div>
+            </div>
+
+            <div class="builder-step" data-step="4">
+              <h3>How far are you willing to travel?</h3>
+              <div class="option-grid single-select">
+                <button class="option-btn" data-group="distance" data-value="Under 50 km">Under 50 km</button>
+                <button class="option-btn" data-group="distance" data-value="50–100 km">50–100 km</button>
+                <button class="option-btn" data-group="distance" data-value="100–200 km">100–200 km</button>
+                <button class="option-btn" data-group="distance" data-value="Anywhere nearby">Anywhere nearby</button>
+              </div>
+            </div>
+
+            <div class="builder-step" data-step="5">
+              <h3>What matters most?</h3>
+              <div class="option-grid multi-select">
+                <button class="option-btn multi" data-group="priorities" data-value="Low Cost">Low Cost</button>
+                <button class="option-btn multi" data-group="priorities" data-value="Less Travel Time">Less Travel Time</button>
+                <button class="option-btn multi" data-group="priorities" data-value="Nature">Nature</button>
+                <button class="option-btn multi" data-group="priorities" data-value="Food">Food</button>
+                <button class="option-btn multi" data-group="priorities" data-value="Adventure">Adventure</button>
+                <button class="option-btn multi" data-group="priorities" data-value="Culture">Culture</button>
+                <button class="option-btn multi" data-group="priorities" data-value="Photography">Photography</button>
+                <button class="option-btn multi" data-group="priorities" data-value="Comfort">Comfort</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="builder-actions">
+            <button class="ghost-btn" id="prevStep">Back</button>
+            <button class="primary-btn" id="nextStep">Next</button>
+            <button class="primary-btn final-btn hidden" id="generateTrip">✨ Find My Perfect Trip</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="results-section container" id="destinations">
+        <div class="section-heading">
+          <p>AI Trip Match Result</p>
+          <h2>Your Trip Matches</h2>
+        </div>
+        <div class="results-grid" id="resultsGrid"></div>
+      </section>
+
+      <section class="detail-section container" id="destinationDetails">
+        <div class="detail-shell">
+          <div class="detail-copy">
+            <div class="eyebrow subtle">Why this destination?</div>
+            <h3>This destination matches your selected preferences.</h3>
+            <p>
+              TripMate compares your vibe, budget and travel style to the destination profile before recommending it.
+            </p>
+
+            <div class="compatibility-wrap">
+              <div class="compatibility-row header-row">
+                <span>Your Preferences</span>
+                <span>Destination</span>
+              </div>
+              <div id="compatibilityList"></div>
+            </div>
+          </div>
+
+          <div class="score-panel">
+            <div class="score-ring" id="scoreRing">
+              <span>94%</span>
+            </div>
+            <p class="score-label">Compatibility match</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="itinerary-section container">
+        <div class="section-heading">
+          <p>Personalized Weekend Plan</p>
+          <h2>Your day-by-day adventure.</h2>
+        </div>
+        <div class="itinerary-wrap" id="itineraryWrap"></div>
+      </section>
+
+      <section class="hidden-gems container" id="hidden-gems">
+        <div class="section-heading">
+          <p>Hidden Gems</p>
+          <h2>✨ Don't Just Visit. Discover.</h2>
+        </div>
+        <div class="gems-grid" id="gemsGrid"></div>
+      </section>
+
+      <section class="budget-section container">
+        <div class="section-heading">
+          <p>Smart Budget</p>
+          <h2>Plan around what feels comfortable.</h2>
+        </div>
+
+        <div class="budget-shell">
+          <div class="budget-left">
+            <h3>Total estimated trip cost</h3>
+            <div class="budget-total" id="budgetTotal">₹1,650–₹2,100</div>
+            <div class="budget-breakdown">
+              <div class="bar-item">
+                <div class="bar-label"><span>🚗 Travel</span><span id="travelCost">₹600–₹800</span></div>
+                <div class="bar-track"><span style="width: 34%"></span></div>
+              </div>
+              <div class="bar-item">
+                <div class="bar-label"><span>🍴 Food</span><span id="foodCost">₹400–₹600</span></div>
+                <div class="bar-track"><span style="width: 26%"></span></div>
+              </div>
+              <div class="bar-item">
+                <div class="bar-label"><span>🎟️ Activities</span><span id="activityCost">₹200–₹300</span></div>
+                <div class="bar-track"><span style="width: 15%"></span></div>
+              </div>
+              <div class="bar-item">
+                <div class="bar-label"><span>🏨 Stay</span><span id="stayCost">₹450–₹700</span></div>
+                <div class="bar-track"><span style="width: 25%"></span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="budget-right">
+            <div class="group-card">
+              <span class="badge">Split with Friends</span>
+              <h4>Estimated per person</h4>
+              <div class="per-person" id="perPerson">₹413–₹525</div>
+              <p>These are estimates based on typical weekend travel ranges, not guaranteed live prices.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="flexibility container">
+        <div class="section-heading">
+          <p>Uncertainty / Flexibility</p>
+          <h2>How Flexible Is This Trip?</h2>
+        </div>
+        <div class="flex-grid">
+          <div class="flex-card">
+            <div class="flex-icon">💰</div>
+            <div>
+              <h4>Budget certainty</h4>
+              <span class="tag low">Low</span>
+            </div>
+          </div>
+          <div class="flex-card">
+            <div class="flex-icon">🕒</div>
+            <div>
+              <h4>Travel-time certainty</h4>
+              <span class="tag medium">Medium</span>
+            </div>
+          </div>
+          <div class="flex-card">
+            <div class="flex-icon">🌦️</div>
+            <div>
+              <h4>Weather sensitivity</h4>
+              <span class="tag high">High</span>
+            </div>
+          </div>
+          <div class="flex-card">
+            <div class="flex-icon">🚦</div>
+            <div>
+              <h4>Traffic sensitivity</h4>
+              <span class="tag medium">Medium</span>
+            </div>
+          </div>
+        </div>
+        <p class="flex-note">These are planning estimates, not guarantees.</p>
+        <button class="secondary-btn alt-btn">View Alternative Plan</button>
+      </section>
+
+      <section class="plan-b container">
+        <div class="plan-shell">
+          <div class="section-heading left-text">
+            <p>Plan B</p>
+            <h2>What if your plan changes?</h2>
+          </div>
+          <div class="plan-list">
+            <div class="plan-item"><span>🌧️</span> If it rains <small>→ Indoor / covered activities</small></div>
+            <div class="plan-item"><span>💸</span> If budget decreases <small>→ Remove optional activities</small></div>
+            <div class="plan-item"><span>⏰</span> If you start late <small>→ Shorten itinerary</small></div>
+            <div class="plan-item"><span>🚗</span> If travel time increases <small>→ Remove distant stop</small></div>
+          </div>
+          <button class="primary-btn" id="planBBtn">Generate Plan B</button>
+        </div>
+      </section>
+
+      <section class="surprise-section container">
+        <div class="section-heading">
+          <p>Surprise Me</p>
+          <h2>🎲 Your Weekend Surprise</h2>
+        </div>
+        <div class="surprise-card" id="surpriseCard">
+          <div class="surprise-spinner">
+            <div class="spinner-ring"></div>
+            <button class="primary-btn" id="spinSurprise">Roll the dice</button>
+          </div>
+          <div class="surprise-result hidden" id="surpriseResult">
+            <div class="result-pill">Destination</div>
+            <h3 id="surpriseDestination">Puducherry</h3>
+            <div class="surprise-meta">
+              <span id="surpriseMood">Mood: Chill</span>
+              <span id="surpriseBudget">Est. budget: ₹2,000–₹3,500</span>
+            </div>
+            <div class="surprise-activity">
+              <strong>One unique activity</strong>
+              <p id="surpriseActivity">Sunset stroll at the French Quarter and hidden cafe hop.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="comparison-section container" id="comparison-section">
+        <div class="section-heading">
+          <p>Trip Comparison</p>
+          <h2>Compare a few ideas side by side.</h2>
+        </div>
+        <div class="comparison-table-wrap">
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th>Destination</th>
+                <th>Match Score</th>
+                <th>Budget</th>
+                <th>Distance</th>
+                <th>Travel Time</th>
+                <th>Best For</th>
+                <th>Activities</th>
+              </tr>
+            </thead>
+            <tbody id="compareTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="saved-section container" id="my-trips">
+        <div class="section-heading">
+          <p>Save My Trip</p>
+          <h2>My Trips</h2>
+        </div>
+        <div class="saved-grid" id="savedTripsGrid"></div>
+      </section>
+
+      <section class="about-section container" id="about">
+        <div class="section-heading">
+          <p>About Us</p>
+          <h2>TripMate AI is designed to make weekend planning simpler.</h2>
+        </div>
+        <div class="about-grid">
+          <article class="about-card">
+            <h3>Our Mission</h3>
+            <p>To turn a noisy list of options into one personalized weekend plan built around your mood, time and budget.</p>
+          </article>
+          <article class="about-card">
+            <h3>Our Vision</h3>
+            <p>To help every traveler feel confident choosing a trip that matches their energy instead of following generic advice.</p>
+          </article>
+          <article class="about-card">
+            <h3>Why We Built TripMate</h3>
+            <p>Because weekend plans should feel thoughtfully designed, easy to customize and genuinely aligned with how people travel.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="how-section container">
+        <div class="section-heading">
+          <p>How It Works</p>
+          <h2>Design your weekend in four easy steps.</h2>
+        </div>
+        <div class="steps-grid">
+          <div class="process-card">
+            <span class="step-number">01</span>
+            <h3>Tell us your vibe</h3>
+          </div>
+          <div class="process-card">
+            <span class="step-number">02</span>
+            <h3>Set your budget &amp; time</h3>
+          </div>
+          <div class="process-card">
+            <span class="step-number">03</span>
+            <h3>Get your AI trip match</h3>
+          </div>
+          <div class="process-card">
+            <span class="step-number">04</span>
+            <h3>Customize your weekend</h3>
+          </div>
+        </div>
+      </section>
+
+      <section class="contact-section container" id="contact">
+        <div class="contact-shell">
+          <div class="contact-copy">
+            <div class="eyebrow subtle">Get in touch</div>
+            <h2>Plan better weekends with a trip that fits your style.</h2>
+            <div class="contact-meta">
+              <p><strong>Email</strong><span>hello@tripmateai.com</span></p>
+              <p><strong>Social Media</strong><span>@tripmateai</span></p>
+              <p><strong>Location</strong><span>Bengaluru, India</span></p>
+            </div>
+          </div>
+
+          <form class="contact-form">
+            <div class="field-row">
+              <label>
+                <span>Name</span>
+                <input type="text" placeholder="Your name" />
+              </label>
+              <label>
+                <span>Email</span>
+                <input type="email" placeholder="you@example.com" />
+              </label>
+            </div>
+            <label>
+              <span>Subject</span>
+              <input type="text" placeholder="How can we help?" />
+            </label>
+            <label>
+              <span>Message</span>
+              <textarea rows="5" placeholder="Tell us about your dream weekend..."></textarea>
+            </label>
+            <button class="primary-btn" type="submit">Send Message</button>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer-shell">
+        <div>
+          <div class="brand-wrap">
+            <div class="brand-mark">T</div>
+            <div class="brand-text">
+              <span class="brand-name">TripMate AI</span>
+              <small>Your weekend. Your vibe. Your perfect plan.</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-links">
+          <h4>Quick Links</h4>
+          <a href="#home">Home</a>
+          <a href="#trip-builder">Trip Builder</a>
+          <a href="#destinations">Destinations</a>
+          <a href="#my-trips">My Trips</a>
+          <a href="#about">About</a>
+          <a href="#contact">Contact</a>
+        </div>
+
+        <div class="footer-social">
+          <h4>Follow</h4>
+          <div class="social-icons">
+            <span>◎</span>
+            <span>◌</span>
+            <span>◍</span>
+            <span>◐</span>
+          </div>
+        </div>
+      </div>
+      <div class="container copyright">© 2026 TripMate AI. All rights reserved.</div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
